@@ -7,7 +7,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-GHW3 Summary: 
+Loan Amount v. Jobs Retained Analysis for Project: 
 
 We found the average values for Loan Amount and Jobs Retained for Irvine, Long Beach and Los Angeles. We then conducted zsum tests to get 95% confidence intervals for Loan Amount and Jobs Retained. Lastly, we used a t test to compare all of the cities together.
 
