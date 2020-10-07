@@ -1,0 +1,170 @@
+---
+title: "California Business Analysis"
+name: Noah Gallagher
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+GHW3 Summary: 
+
+We found the average values for Loan Amount and Jobs Retained for Irvine, Long Beach and Los Angeles. We then conducted zsum tests to get 95% confidence intervals for Loan Amount and Jobs Retained. Lastly, we used a t test to compare all of the cities together.
+
+For my samples in GHW3, I found that Los Angeles had the highest average Loan Amount, followed by Irvine and then Long Beach. I also found that Long Beach had the highest average Jobs Retained, followed by LA and then Irvine. 
+
+
+```{r Q1}
+Loan = PPP150$LoanAmount
+Job = PPP150$JobsRetained
+
+Irvine_Loan = PPP150$LoanAmount[which(PPP150$City=="IRVINE")] 
+Irvine_Job = PPP150$JobsRetained[which(PPP150$City=="IRVINE")] 
+   
+LB_Loan = PPP150$LoanAmount[which(PPP150$City=="LONG BEACH")]
+LB_Job = PPP150$JobsRetained[which(PPP150$City=="LONG BEACH")]
+   
+LA_Loan = PPP150$LoanAmount[which(PPP150$City=="LOS ANGELES")]
+LA_Job = PPP150$JobsRetained[which(PPP150$City=="LOS ANGELES")]
+```
+
+## Histograms for LoanAmount and JobsRetained for each city
+```{r Q2,echo=FALSE}
+hist(Irvine_Loan,freq=F,xlab="LoanAmount")
+hist(LB_Loan,freq=F,xlab="LoanAmount")
+hist(LA_Loan,freq=F,xlab="LoanAmount")
+
+hist(Irvine_Job,breaks=c(seq(0,500,10)),freq=F,xlab="JobRetained")
+hist(LB_Job,breaks=c(seq(0,500,10)),freq=F,xlab="JobRetained")
+hist(LA_Job,breaks=c(seq(0,500,10)),freq=F,xlab="JobRetained")
+```
+For LoanAmount, the shapes of the distributions are all skewed right and generally all look about the same. However, it looks like Irvine and Los Angeles have more distribution towards the left of the graph compared to Long Beach. Most of the LoanAmount for all 3 cities is under $50,000 as the graphs are skewed right. 
+
+For the JobsRetained, the graphs for each city look very similar as there is a high distribution under 50. 
+
+These are all PDF Histograms.
+
+```{r Q4}
+MLE_LB = (length(LB_Loan))/sum(LB_Loan) # =3.031208e-05
+MLE_Irvine = (length(Irvine_Loan))/sum(Irvine_Loan) # =2.680865e-05
+MLE_LA = (length(LA_Loan))/sum(LA_Loan) # =3.084098e-05
+```
+
+
+##Superimpose the Histogram
+```{r Q5}
+hist(Irvine_Loan,freq=F,xlab="LoanAmount")
+xc<-seq(0,150000,1)
+lines(xc,dexp(xc,rate=MLE_Irvine),col="green")
+
+hist(LB_Loan,freq=F,xlab="LoanAmount")
+xc<-seq(0,150000,1)
+lines(xc,dexp(xc,rate=MLE_LB),col="green")
+
+hist(LA_Loan,freq=F,xlab="LoanAmount")
+xc<-seq(0,150000,1)
+lines(xc,dexp(xc,rate=MLE_LA),col="green")
+```
+Looking at the models, it does not seem very likely that businesses in each city received more than $100,000 in Loans as the models are skewed right, meaning that most of the distribution occurs towards the left of the histogram (under 50,000).
+
+```{r Q6}
+#Probabilities from Model
+
+pexp(100000,rate=MLE_LA,lower.tail=F) #Los Angeles = 0.0458
+
+pexp(100000,rate=MLE_LB,lower.tail=F) #Long Beach = 0.0483
+
+pexp(100000,rate=MLE_Irvine,lower.tail=F) #Irvine = 0.0685
+
+#Actual Proportion
+
+x=0    #Irvine Loan Over $100,000
+for (i in Irvine_Loan){
+  if (i>100000){
+    x= x+1
+  }
+}
+
+
+y=0     #Long Beach Loan Over $100,000
+for (i in LB_Loan){
+  if (i>100000){
+    y= y+1
+  }
+}
+
+
+z=0     #LA Loan Over $100,000
+for (i in LA_Loan){
+  if (i>100000){
+    z= z+1
+  }
+}
+
+prop_x = x/length(Irvine_Loan) 
+#0.08069 --> 8.1% of people have a Loan Amount greater than $100,000 in Irvine
+prop_x
+
+prop_y = y/length(LB_Loan) 
+#0.06278 --> 6.3% of people have a Loan Amount greater than $100,000 in Long Beach
+prop_y
+
+prob_z = z/length(LA_Loan) 
+#0.0628 --> 6.3% of people have a Loan Amount greater than $100,000 in Los Angeles
+prob_z
+```
+
+From the model, our actual probabilities that a city will receive a Loan over $100,000 is 0.0458 for LA, 0.0483 for LB and 0.0685 for Irvine.
+
+From the population, the actual proportions of people that receive a Loan over $100,000 to the whole population is 0.0628 for LA, 0.06278 for LB and 0.08069 for Irvine.
+
+Our actual proportions are about 2% higher than our probabilities from the model, yet they are still very similar. In both the actual and the model data, LA and LB have about the same percentage where as Irvine is 2% higher in both observations.
+
+
+```{r Q7}
+lm(Irvine_Loan~Irvine_Job)
+lm(LA_Loan~LA_Job)
+lm(LB_Loan~LB_Job)
+```
+From these calculations, it seems that Jobs Retained is a predictor for Loan Amount as when there are more jobs retained for the city, the loan amount increases. 
+
+Irvine has the highest Loan-Job ratio, followed by Los Angeles and then Long Beach.
+
+With a very high density of cells on the left side of the graph, we could expect to see a line that follows those cells. Yet since there are very few cells to the right of the graph, out line follows those cells as well, which may be skewing the results.
+
+```{r Q7 IRVINE}
+fit_Irv<-summary(lm(Irvine_Loan~Irvine_Job))
+plot(Irvine_Job,Irvine_Loan, main= "Irvine Loan Amount and Jobs Retained")
+abline(fit_Irv,col="green")
+```
+
+
+```{r Q7 LONG BEACH}
+fit_LB<-summary(lm(LB_Loan~LB_Job))
+plot(LB_Job,LB_Loan, main= "LB Loan Amount and Jobs Retained")
+abline(fit_LB,col="green")
+```
+
+
+```{r Q7 LOS ANGELES}
+fit_LA<-summary(lm(LA_Loan~LA_Job))
+plot(LA_Job,LA_Loan, main= "LA Loan Amount and Jobs Retained")
+abline(fit_LA,col="green")
+```
+
+By taking 3 sample Cities from the PPP funds data sheet, we were able to get an estimated understanding of how the rest of the population looks like. While our mean values from Irvine, Long Beach and Los Angeles were different, they were all pretty close together. Los Angeles had a much bigger population than Irvine and Long Beach which means the means of Los Angeles could be closer to the population's means for Loan Amount and Jobs Retained.
+
+In Group Homework 3, we created 95% Confidence Intervals for Loan Amount and Jobs Retained. These intervals contained values between (20000, 49000) for Loan Amounts and values between (2, 7) for Jobs Retained. These confidence intervals can relate directly to our histograms in this project. For Loan Amount, our histograms were skewed right and had a very high distribution towards the left of the graph which is under 50,000. This means that most of the sample populations received loans under 50,000 dollars, relating directly to our confidence interval which states that we can be 95% certain that the Loan Amount falls between (20000, 49000). As for Jobs Retained, our histograms had a high distribution towards the left of the graph which falls within our confidence interval meaning we can be 95% certain to see Jobs Retained for each city to fall withing (2, 7).
+
+Our 95% confidence intervals also relate to our regression plots & hypothesis tests as we can see a very high density of cells to the left of the plot, meaning that most of the cells are living in the lower range for Loan Amount and Jobs Retained. We see very few cells that are on the right side of the plot meaning that there are very few people receiving very high loans and a high proportion of jobs retained. 
+
+
+
+
+
+
+
+
+
+
+

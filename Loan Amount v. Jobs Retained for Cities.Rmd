@@ -1,0 +1,166 @@
+---
+title: "Loan Amount v. Jobs Retained Analysis for Project"
+Name: Noah Gallagher
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{Questions}
+2) Loan = PPP150$LoanAmount
+   Job = PPP150$JobsRetained
+
+3) Loan[593] = 16250
+   -----------------
+   x<-c(5,130,2358)
+   Job[x] = 9,8,NA
+   
+4) Irvine_Loan = PPP150$LoanAmount[which(PPP150$City=="IRVINE")] 
+   Irvine_Job = PPP150$JobsRetained[which(PPP150$City=="IRVINE")] 
+   
+   LB_Loan = PPP150$LoanAmount[which(PPP150$City=="LONG BEACH")]
+   LB_Job = PPP150$JobsRetained[which(PPP150$City=="LONG BEACH")]
+   
+   LA_Loan = PPP150$LoanAmount[which(PPP150$City=="LOS ANGELES")]
+   LA_Job = PPP150$JobsRetained[which(PPP150$City=="LOS ANGELES")]
+   
+5) set.seed = 40
+   Irv_sam1<-c(sample(Irvine_Loan,40))  
+   I_m1 = mean(Irv_sam1) = 37726.54
+   I_s1 = sd(Irv_sam1) = 36160.03
+   
+   set.seed = 40
+   Irv_sam2<-c(sample(Irvine_Job,40))
+   I_m2 = mean(Irv_sam2,na.rm=TRUE) = 3.028571
+   I_s2 = sd(Irv_sam2,na.rm=TRUE) = 3.062925
+   
+   set.seed = 40
+   LB_sam1<-c(sample(LB_Loan,40))
+   LB_m1 = mean(LB_sam1) = 30651.23
+   LB_s1 = sd(LB_sam1) = 33323.98
+     
+   set.seed = 40
+   LB_sam2<-c(sample(LB_Job,40))
+   LB_m2 = mean(LB_sam2,na.rm=TRUE) = 5.352941
+   LB_s2 = sd(LB_sam2,na.rm=TRUE) = 7.670812
+   
+   set.seed = 40
+   LA_sam1<-c(sample(LA_Loan,40))
+   LA_m1 = mean(LA_sam1) = 38049.82
+   LA_s1 = sd(LA_sam1) = 36596.74
+   
+   set.seed = 40
+   LA_sam2<-c(sample(LA_Job,40))
+   LA_m2 = mean(LA_sam2,na.rm=TRUE) = 4.527778
+   LA_s2 = sd(LA_sam2,na.rm=TRUE) = 5.347823
+   
+6) zsum.test(I_m1,I_s1,40,conf.level = .95) #Irvine Loan
+   95 percent confidence interval: (26520.63, 48932.44)
+   
+   zsum.test(I_m2,I_s2,40,conf.level = .95) #Irvine Job
+   95 percent confidence interval: (2.079378, 3.977764)
+   ----------------------------------------------------
+   zsum.test(LB_m1,LB_s1,40,conf.level=.95) #Long Beach Loan
+   95 percent confidence interval: (20324.21, 40978.25)
+ 
+   zsum.test(LB_m2,LB_s2,40,conf.level = .95) #Long Beach Job
+   95 percent confidence interval: (2.975776, 7.730107)
+   ----------------------------------------------------
+   zsum.test(LA_m1,LA_s1,40,conf.level = .95) #Los Angeles Loan
+   95 percent confidence interval: (26708.58, 49391.05)
+   
+   zsum.test(LA_m2,LA_s2,40,conf.level = .95) #Los Angeles Job
+   95 percent confidence interval: (2.870501, 6.185055)
+
+   #Yes, all of our Confidence Intervals contain the population mean values.
+   
+7) t.test(Irv_sam1,LB_sam1) #Irvine Loan vs Long Beach Loan
+
+	Welch Two Sample t-test
+
+data:  Irv_sam1 and LB_sam1
+t = 0.91001, df = 77.485, p-value = 0.3656
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -8405.178 22555.799
+sample estimates:
+mean of x mean of y 
+ 37726.54  30651.23 
+-----------------------------
+   t.test(Irv_sam1,LA_sam1) #Irvine Loan vs Los Angeles Loan
+
+	Welch Two Sample t-test
+
+data:  Irv_sam1 and LA_sam1
+t = -0.039741, df = 77.989, p-value = 0.9684
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -16518.06  15871.50
+sample estimates:
+mean of x mean of y 
+ 37726.54  38049.82 
+ -----------------------------
+   t.test(LB_sam1,LA_sam1) #Long Beach Loan vs Los Angeles Loan
+
+	Welch Two Sample t-test
+
+data:  LB_sam1 and LA_sam1
+t = -0.94539, df = 77.325, p-value = 0.3474
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -22980.965   8183.786
+sample estimates:
+mean of x mean of y 
+ 30651.23  38049.82 
+  -----------------------------
+   t.test(Irv_sam2,LB_sam2) #Irvine Jobs vs Long Beach Jobs
+
+	Welch Two Sample t-test
+
+data:  Irv_sam2 and LB_sam2
+t = -1.6441, df = 43.012, p-value = 0.1074
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -5.1754319  0.5266924
+sample estimates:
+mean of x mean of y 
+ 3.028571  5.352941 
+-----------------------------
+   t.test(Irv_sam2,LA_sam2) #Irvine Jobs vs Los Angeles Jobs
+
+	Welch Two Sample t-test
+
+data:  Irv_sam2 and LA_sam2
+t = -1.4545, df = 56.036, p-value = 0.1514
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -3.5640369  0.5656242
+sample estimates:
+mean of x mean of y 
+ 3.028571  4.527778 
+ -----------------------------
+ t.test(LA_sam2,LB_sam2) #Los Angeles Jobs vs Long Beach Jobs
+
+	Welch Two Sample t-test
+
+data:  LA_sam2 and LB_sam2
+t = -0.51928, df = 58.606, p-value = 0.6055
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -4.005273  2.354947
+sample estimates:
+mean of x mean of y 
+ 4.527778  5.352941 
+
+#In terms of Loans, our Los Angeles sample has the highest average Loan amount, followed by Irvine and then Long Beach.
+
+#In terms of Job Retained, our Long Beach sample has the highest average Jobs Retained amount, followed by Los Angeles and then Irvine. 
+ 
+--------------------------------------------------------
+   
+```
+
