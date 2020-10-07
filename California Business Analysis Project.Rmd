@@ -11,7 +11,7 @@ Loan Amount v. Jobs Retained Analysis for Project:
 
 We found the average values for Loan Amount and Jobs Retained for Irvine, Long Beach and Los Angeles. We then conducted zsum tests to get 95% confidence intervals for Loan Amount and Jobs Retained. Lastly, we used a t test to compare all of the cities together.
 
-For my samples in GHW3, I found that Los Angeles had the highest average Loan Amount, followed by Irvine and then Long Beach. I also found that Long Beach had the highest average Jobs Retained, followed by LA and then Irvine. 
+For my samples in Loan Amount v. Jobs Retained Analysis for Project, I found that Los Angeles had the highest average Loan Amount, followed by Irvine and then Long Beach. I also found that Long Beach had the highest average Jobs Retained, followed by LA and then Irvine. 
 
 
 ```{r Q1}
